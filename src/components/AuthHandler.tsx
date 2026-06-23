@@ -28,7 +28,7 @@ export default function AuthHandler() {
     if (authState === 'authenticated')
         return <></>
 
-    return <Dialog defaultOpen>
+    return <Dialog defaultOpen open>
         <DialogContent showCloseButton={false}>
             {getElement()}
         </DialogContent>

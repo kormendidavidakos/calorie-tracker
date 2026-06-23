@@ -1,29 +1,42 @@
-import type { Profile } from '@/lib/supabase/types';
+import type { Goal, Profile } from '@/lib/supabase/types';
+import type { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
 
 type ViewState = 'dashboard' | 'add-meal' | 'settings';
-type AuthState = 'unauthenticated' | 'authenticated' | 'login' | 'signUp' | 'forgotPassword' | 'updatePassword'
+type AuthState = 'unauthenticated' | 'authenticated' | 'login' | 'signUp' | 'forgotPassword' | 'updatePassword' | 'loading'
 
 
 interface AppState {
-  currentView: ViewState;
-  setCurrentView: (view: ViewState) => void;
+	currentView: ViewState;
+	setCurrentView: (view: ViewState) => void
 
-  authState: AuthState,
-  setAuthState: (state: AuthState) => void
+	authState: AuthState
+	setAuthState: (state: AuthState) => void
 
-  profile: Profile|null
-  setProfile: (profile: Profile|null) => void
+	session: Session | null
+	setSession: (session: Session | null) => void
+
+	profile: Profile | null
+	setProfile: (profile: Profile | null) => void
+
+	goal: Goal | null
+	setGoal: (goal: Goal | null) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  currentView: 'dashboard',
-  setCurrentView: (view) => set({ currentView: view }),
+	currentView: 'dashboard',
+	setCurrentView: (currentView) => set({ currentView }),
 
-  authState: "unauthenticated",
-  setAuthState: (state) => set({ authState: state }),
+	authState: "loading",
+	setAuthState: (authState) => set({ authState }),
 
-  profile: null,
-  setProfile: (profile) => set({ profile: profile }),
+	session: null,
+	setSession: (session) => set({session}),
+
+	profile: null,
+	setProfile: (profile) => set({ profile }),
+
+	goal: null,
+	setGoal: (goal ) => set({ goal })
 
 }));
