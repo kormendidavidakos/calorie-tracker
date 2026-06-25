@@ -16,6 +16,7 @@ export interface Day {
     fat: number
     carb: number
     protein: number
+    day: string
 }
 
 export const BaseUnits = ['g', 'ml'] as const

@@ -1,4 +1,4 @@
-import type { Goal, Profile } from '@/lib/supabase/types';
+import type { Day, Goal, Profile } from '@/lib/supabase/types';
 import type { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
 
@@ -21,6 +21,12 @@ interface AppState {
 
 	goal: Goal | null
 	setGoal: (goal: Goal | null) => void
+
+	days: Day[]
+	setDays: (days: Day[]) => void
+
+	renderedDay: Day|null
+	setRenderedDay: (renderedDay: Day) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -37,6 +43,12 @@ export const useAppStore = create<AppState>((set) => ({
 	setProfile: (profile) => set({ profile }),
 
 	goal: null,
-	setGoal: (goal ) => set({ goal })
+	setGoal: (goal ) => set({ goal }),
+
+	days: [],
+	setDays: (days) => set({days}),
+
+	renderedDay: null,
+	setRenderedDay: (renderedDay: Day|null) => set({renderedDay}),
 
 }));

@@ -4,6 +4,7 @@ import UserSetup from "./components/UserSetup"
 import { useAppStore } from "./store/useAppStore"
 import { useEffect } from "react"
 import { supabase } from "./lib/supabase/client"
+import DailyIntake from "./components/DailyIntake"
 
 
 
@@ -28,6 +29,7 @@ export default function App() {
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 			<AuthHandler />
 			<UserSetup />
+			<DailyIntake/>
 		</ThemeProvider>
 
 	)
