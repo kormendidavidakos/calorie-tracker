@@ -19,7 +19,7 @@ export function ProgressWithLabel({ displayPercent = true, title = '', displayEx
         <Field className="w-full max-w-sm select-none">
             <FieldLabel htmlFor={`progress-${title}`}>
                 <span>{title}</span>
-                <span className="ml-auto">{displayPercent && percent}%</span>
+                <span className="ml-auto">{displayPercent ? <>{percent}%</> : <>&nbsp;</>}</span>
             </FieldLabel>
             <Progress value={percent} id={`progress-${title}`} />
             {displayExact && <FieldLabel className="flex justify-center">

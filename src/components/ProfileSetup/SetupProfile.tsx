@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import type { SetupStageProps } from "../UserSetup";
 import { useAppStore } from "@/store/useAppStore";
 import { supabase } from "@/lib/supabase/client";
-import type { Profile } from "@/lib/supabase/types";
+import type { Profile } from "@/lib/supabase/client";
 
 export default function SetupProfile({ onSuccess }: SetupStageProps) {
     const [username, setUsername] = useState('')

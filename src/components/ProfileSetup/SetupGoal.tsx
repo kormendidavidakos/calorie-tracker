@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { supabase } from "@/lib/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
-import type { Goal } from "@/lib/supabase/types";
+import type { Goal } from "@/lib/supabase/client";
 
 interface FieldValue {
     value: number,

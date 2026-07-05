@@ -2,11 +2,12 @@ import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import { Input } from "../ui/input"
-import { type Food } from "@/lib/supabase/types"
+import { type Food } from "@/lib/supabase/client"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Search } from "lucide-react"
 import { supabase } from "@/lib/supabase/client"
 import CreateFood from "./CreateFood"
+import AddFoodAmount from "./AddFoodAmount"
 
 interface Props {
 }
@@ -15,12 +16,12 @@ export default function AddFood({ }: Props) {
     const [search, setSearch] = useState('')
     const [searchResult, setSearchResult] = useState<Food[]>([])
     const [isSearching, setIsSearching] = useState(false)
-
-    const debouncedSearch = useDebounce(search, 500);
+    const [open, setOpen] = useState(false)
+    const debouncedSearch = useDebounce(search.trim(), 500);
+    const [openFood, setOpenFood] = useState<Food|null>(null)
 
     useEffect(() => {
-        const searchName = debouncedSearch.trim()
-        if (!searchName) {
+        if (!debouncedSearch) {
             setSearchResult([])
             return
         }
@@ -28,7 +29,7 @@ export default function AddFood({ }: Props) {
         setIsSearching(true)
         supabase.from('foods')
             .select('*')
-            .ilike('name', `%${searchName}%`)
+            .ilike('name', `%${debouncedSearch}%`)
             .limit(10).then(({ data, error }) => {
                 setIsSearching(false)
                 if (error) return
@@ -36,6 +37,10 @@ export default function AddFood({ }: Props) {
                 setSearchResult(data || [])
             })
     }, [debouncedSearch])
+    
+    useEffect(() => {
+        setOpenFood(null)
+    }, [open])
 
     function renderSearchResult() {
         if (debouncedSearch.length === 0)
@@ -47,14 +52,21 @@ export default function AddFood({ }: Props) {
 
         return <ul className="flex flex-col divide-y">
             {searchResult.map((food, idx) => (
-                <li key={idx} className="p-3 hover:bg-slate-50 cursor-pointer">
+                <Button key={idx} variant={"ghost"} className="p-3" onClick={() => setOpenFood(food)}>
                     {food.name}
-                </li>
+                </Button>
             ))}
         </ul>
     }
 
-    return <Dialog modal>
+    function onClose(pt: boolean){
+        setOpenFood(null)
+
+        if (open)
+            setOpen(false)
+    }
+
+    return <Dialog modal open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
             <Button variant={"outline"} className="px-6 py-4 text-lg font-bold">
                 Add
@@ -89,10 +101,11 @@ export default function AddFood({ }: Props) {
 
                 <div className="flex flex-col gap-4 items-center">
                     {renderSearchResult()}
-                    <CreateFood defaultName={search.trim()}/>
+                    <CreateFood defaultName={search.trim()} updateSearch={(food) => setOpenFood(food)}/>
                 </div>
             </div>
-
+            
+            <AddFoodAmount food={openFood} onClose={onClose}/>
         </DialogContent>
     </Dialog>
 }

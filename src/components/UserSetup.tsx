@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect, useState } from "react";
-import { type Goal, type Profile} from '@/lib/supabase/types'
+import { type Goal, type Profile} from '@/lib/supabase/client'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SetupProfile from "./ProfileSetup/SetupProfile";
 import SetupGoal from "./ProfileSetup/SetupGoal";

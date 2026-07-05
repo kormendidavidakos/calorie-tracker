@@ -1,10 +1,9 @@
-import type { Day, Goal, Profile } from '@/lib/supabase/types';
+import type { DailyFood, Day, Goal, Profile } from '@/lib/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
 
 type ViewState = 'dashboard' | 'add-meal' | 'settings';
 type AuthState = 'unauthenticated' | 'authenticated' | 'login' | 'signUp' | 'forgotPassword' | 'updatePassword' | 'loading'
-
 
 interface AppState {
 	currentView: ViewState;
@@ -25,8 +24,12 @@ interface AppState {
 	days: Day[]
 	setDays: (days: Day[]) => void
 
-	renderedDay: Day|null
-	setRenderedDay: (renderedDay: Day) => void
+	dailyFoods: DailyFood[]
+	setDailyFoods: (dailyFoods: DailyFood[]) => void
+
+	renderedDay: DailyFood[]
+	setRenderedDay: (renderedDay: DailyFood[]) => void
+
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -48,7 +51,10 @@ export const useAppStore = create<AppState>((set) => ({
 	days: [],
 	setDays: (days) => set({days}),
 
-	renderedDay: null,
-	setRenderedDay: (renderedDay: Day|null) => set({renderedDay}),
+	dailyFoods: [],
+	setDailyFoods: (dailyFoods: DailyFood[]) => set({dailyFoods}),
+
+	renderedDay: [],
+	setRenderedDay: (renderedDay: DailyFood[]) => set({renderedDay}),
 
 }));

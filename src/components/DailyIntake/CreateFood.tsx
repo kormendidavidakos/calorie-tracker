@@ -2,18 +2,19 @@ import { PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { useEffect, useState } from "react";
-import { Field, FieldGroup } from "../ui/field";
+import { Field } from "../ui/field";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { supabase } from "@/lib/supabase/client";
+import { supabase, type Food } from "@/lib/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
 
 
 interface Props {
     defaultName: string
+    updateSearch: (food: Food) => void
 }
 
-export default function CreateFood({ defaultName }: Props) {
+export default function CreateFood({ defaultName, updateSearch }: Props) {
     const [name, setName] = useState("")
     const [calories, setCalories] = useState(0)
     const [fat, setFat] = useState(0)
@@ -27,7 +28,7 @@ export default function CreateFood({ defaultName }: Props) {
         setName(defaultName)
     }, [defaultName])
 
-    function renderValue(value: number, unit: 'kcal'|'g'){
+    function renderValue(value: number, unit: string){
         if (value === 0) return ''
         return `${value}`
     }
@@ -41,7 +42,9 @@ export default function CreateFood({ defaultName }: Props) {
             user_id: session.user.id
         }).select('*')
 
-        if (error) return
+        if (error || !data.length) return
+
+        updateSearch(data[0])
         setOpen(false)
     }
 
