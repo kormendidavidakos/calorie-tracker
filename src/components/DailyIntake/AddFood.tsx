@@ -62,8 +62,10 @@ export default function AddFood({ }: Props) {
     function onClose(pt: boolean){
         setOpenFood(null)
 
-        if (open)
+        if (open){
+            setSearch('')
             setOpen(false)
+        }
     }
 
     return <Dialog modal open={open} onOpenChange={setOpen}>

@@ -5,6 +5,7 @@ import DailyProgress from "./DailyIntake/DailyProgress"
 import AddFood from "./DailyIntake/AddFood"
 import DateSelector from "./DailyIntake/DateSelector"
 import dateHelpers from "@/helpers/dateHelpers"
+import DailyFoods from "./DailyIntake/DailyFoods"
 
 
 export default function DailyIntake() {
@@ -31,10 +32,11 @@ export default function DailyIntake() {
 
 
     return <div className="flex flex-col items-center p-2 w-full">
-        <div className="flex flex-col items-center p-2 w-full gap-4">
+        <div className="flex flex-col items-center p-2 max-w-110 w-full gap-4">
             <DateSelector />
             <DailyProgress />
             <AddFood/>
+            <DailyFoods/>
         </div>
     </div>
 }
