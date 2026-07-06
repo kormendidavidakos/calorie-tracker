@@ -19,7 +19,7 @@ export default function Navbar() {
         })
     }
     
-    return <div className="w-full h-15 flex justify-around items-center border-t border-accent">
+    return <div className="fixed bg-background bottom-0 left-0 w-full h-15 flex justify-around items-center border-t border-accent">
         {renderIcons()}
     </div>
 }

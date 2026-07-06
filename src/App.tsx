@@ -40,7 +40,7 @@ export default function App() {
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 			<div className="page-container flex flex-col h-screen! w-screen">
 				{getCurrentPage()}
-				<div className="grow">&nbsp;</div>
+				<div className="grow min-h-20">&nbsp;</div>
 				<Navbar />
 			</div>
 		</ThemeProvider>
