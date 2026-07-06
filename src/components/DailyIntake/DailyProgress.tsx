@@ -7,10 +7,10 @@ export default function DailyProgress() {
     if (!renderedDay || !goal) return <></>
 
     const actual = {
-        kcal: renderedDay.map(d => d.kcal).reduce((p, c) => p + c, 0),
-        fat: renderedDay.map(d => d.fat).reduce((p, c) => p + c, 0),
-        carb: renderedDay.map(d => d.carb).reduce((p, c) => p + c, 0),
-        protein: renderedDay.map(d => d.protein).reduce((p, c) => p + c, 0),
+        kcal: Math.round(renderedDay.map(d => d.kcal).reduce((p, c) => p + c, 0)),
+        fat: Math.round(renderedDay.map(d => d.fat).reduce((p, c) => p + c, 0)),
+        carb: Math.round(renderedDay.map(d => d.carb).reduce((p, c) => p + c, 0)),
+        protein: Math.round(renderedDay.map(d => d.protein).reduce((p, c) => p + c, 0)),
     }
     
     return <div className="flex flex-col gap-2 w-[90%] mx-auto items-center">
