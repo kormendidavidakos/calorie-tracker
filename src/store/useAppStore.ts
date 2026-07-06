@@ -4,6 +4,7 @@ import { create } from 'zustand';
 
 type ViewState = 'dashboard' | 'add-meal' | 'settings';
 type AuthState = 'unauthenticated' | 'authenticated' | 'login' | 'signUp' | 'forgotPassword' | 'updatePassword' | 'loading'
+type Page = 'home' | 'profile'
 
 interface AppState {
 	currentView: ViewState;
@@ -30,6 +31,8 @@ interface AppState {
 	renderedDay: DailyFood[]
 	setRenderedDay: (renderedDay: DailyFood[]) => void
 
+	page: Page
+	setPage: (page: Page) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -57,4 +60,6 @@ export const useAppStore = create<AppState>((set) => ({
 	renderedDay: [],
 	setRenderedDay: (renderedDay: DailyFood[]) => set({renderedDay}),
 
+	page: 'home',
+	setPage: (page) => set({page})
 }));

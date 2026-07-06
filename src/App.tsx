@@ -1,15 +1,15 @@
 import { ThemeProvider } from "./components/ThemeProvider"
-import AuthHandler from "./components/AuthHandler"
-import UserSetup from "./components/UserSetup"
 import { useAppStore } from "./store/useAppStore"
 import { useEffect } from "react"
 import { supabase } from "./lib/supabase/client"
-import DailyIntake from "./components/DailyIntake"
+import Navbar from "./components/Navbar"
+import Home from "./pages/Home"
+import Profile from "./pages/Profile"
 
 
 
 export default function App() {
-	const { setAuthState, setSession } = useAppStore()
+	const { setAuthState, setSession, page } = useAppStore()
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,11 +25,24 @@ export default function App() {
 		return () => subscription.unsubscribe();
 	}, [setAuthState]);
 
+	function getCurrentPage(){
+		switch (page) {
+			case 'home':
+				return <Home />
+			case 'profile':
+				return <Profile />
+			default:
+				return <div className="text-4xl text-center">MOUNT PAGE<br/>`{page}`<br/>IN App.tsx</div>
+		}
+	}
+
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<AuthHandler />
-			<UserSetup />
-			<DailyIntake/>
+			<div className="page-container flex flex-col h-screen! w-screen">
+				{getCurrentPage()}
+				<div className="grow">&nbsp;</div>
+				<Navbar />
+			</div>
 		</ThemeProvider>
 
 	)

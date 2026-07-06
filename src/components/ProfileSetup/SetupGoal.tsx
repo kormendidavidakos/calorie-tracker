@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SetupStageProps } from "../UserSetup";
 import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
@@ -19,7 +19,17 @@ export default function SetupGoal({ onSuccess }: SetupStageProps) {
     const [carb, setCarb] = useState<FieldValue>({ value: 0, valid: true })
     const [protein, setProtein] = useState<FieldValue>({ value: 0, valid: true })
 
-    const {session, setGoal} = useAppStore()
+    const {session, setGoal, goal} = useAppStore()
+
+    useEffect(() => {
+        if (!goal) return
+
+        setWeight({valid: true, value: goal.weight})
+        setKcal({valid: true, value: goal.kcal})
+        setFat({valid: true, value: goal.fat})
+        setCarb({valid: true, value: goal.carb})
+        setProtein({valid: true, value: goal.protein})
+    }, [goal])
 
     async function onSubmit() {
         if (!session) return
@@ -60,6 +70,6 @@ export default function SetupGoal({ onSuccess }: SetupStageProps) {
 
         </FieldGroup>
 
-        <Button className="cursor-pointer" onClick={onSubmit}>Complete</Button>
+        <Button className="cursor-pointer" onClick={onSubmit}>{goal === null ? 'Complete' : 'Save'}</Button>
     </>
 }
