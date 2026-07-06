@@ -1,5 +1,4 @@
 import dateHelpers from "@/helpers/dateHelpers";
-import type { DailyFood } from "@/lib/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -11,7 +10,7 @@ export default function DateSelector() {
     if (differentDays.at(-1) !== today)
         differentDays.push(today)
 
-    const days = differentDays.map(day => dailyFoods.filter(f => dateHelpers.getDate(f?.created_at) === day)) as DailyFood[][] ?? []
+    const days = differentDays.map(day => dailyFoods.filter(f => dateHelpers.getDate(f.created_at) === day))
 
 
     const renderedDate = renderedDay.length > 0 ? dateHelpers.getDate(renderedDay[0].created_at) : today
