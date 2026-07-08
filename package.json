@@ -9,7 +9,6 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
@@ -27,6 +26,7 @@
     "lucide-react": "^1.20.0",
     "radix-ui": "^1.6.0",
     "react": "^19.2.6",
+    "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.79.0",
     "recharts": "^3.8.1",

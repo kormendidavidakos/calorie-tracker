@@ -1,74 +1,55 @@
-import { useEffect, useState } from "react";
-import type { SetupStageProps } from "../UserSetup";
-import { Field, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+import { supabase, } from "@/lib/supabase/client";
 import { Button } from "../ui/button";
-import { supabase } from "@/lib/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
-import type { Goal } from "@/lib/supabase/client";
+import type { SetupStageProps } from "../UserSetup";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import type { Database } from "@/lib/supabase/supabase";
+import SetupGoalAutomatically from "./SetupGoalAutomatically";
+import SetupGoalManually from "./SetupGoalManually";
+import SwitchButton from "../SwitchButton";
 
-interface FieldValue {
-    value: number,
-    valid: boolean
+
+export type GoalSetup = Database['public']['Tables']['goals']['Insert']
+export interface SetupGoalProps {
+    goalSetup: GoalSetup
+    setGoalSetup: Dispatch<SetStateAction<GoalSetup>>
 }
 
 export default function SetupGoal({ onSuccess }: SetupStageProps) {
-    const [weight, setWeight] = useState<FieldValue>({ value: 0, valid: true })
-    const [kcal, setKcal] = useState<FieldValue>({ value: 0, valid: true })
-    const [fat, setFat] = useState<FieldValue>({ value: 0, valid: true })
-    const [carb, setCarb] = useState<FieldValue>({ value: 0, valid: true })
-    const [protein, setProtein] = useState<FieldValue>({ value: 0, valid: true })
+    const { session, setGoal, goal } = useAppStore()
 
-    const {session, setGoal, goal} = useAppStore()
+    const [goalSetup, setGoalSetup] = useState<GoalSetup>({carb: 0, fat: 0, kcal: 0, protein: 0, weight: 0})
+    const [mode, setMode] = useState<'Manual'|'Automatic'>('Automatic')
 
     useEffect(() => {
         if (!goal) return
 
-        setWeight({valid: true, value: goal.weight})
-        setKcal({valid: true, value: goal.kcal})
-        setFat({valid: true, value: goal.fat})
-        setCarb({valid: true, value: goal.carb})
-        setProtein({valid: true, value: goal.protein})
+        setGoalSetup({...goal})
     }, [goal])
+
 
     async function onSubmit() {
         if (!session) return
-        const {data, error} = await supabase.from('goals').insert([
-            {user_id: session.user.id, weight: weight.value, kcal: kcal.value, fat: fat.value, carb: carb.value, protein: protein.value}
+
+        const {carb, fat, kcal, protein, weight} = goalSetup
+        if (!carb || !fat || !kcal || !protein || !weight) return
+
+        const { data, error } = await supabase.from('goals').insert([
+            { user_id: session.user.id, weight, kcal, fat, carb, protein }
         ]).select()
 
-        if (error){
-            return
-        }
+        if (error || !data.length) return
 
-        setGoal(data[0] as Goal)
+        setGoal(data[0])
         onSuccess()
     }
 
-    return <>
-        <FieldGroup>
-            <Field>
-                <FieldLabel htmlFor="weight">Weight</FieldLabel>
-                <Input id="weight" type="number" value={weight.value} aria-invalid={!weight.valid} onChange={(ev) => setWeight({ value: Number(ev.target.value), valid: true })} />
-            </Field>
-            <Field>
-                <FieldLabel htmlFor="kcal">Calories</FieldLabel>
-                <Input id="kcal" type="number" value={kcal.value} aria-invalid={!kcal.valid} onChange={(ev) => setKcal({ value: Number(ev.target.value), valid: true })} />
-            </Field>
-            <Field>
-                <FieldLabel htmlFor="fat">Fat</FieldLabel>
-                <Input id="fat" type="number" value={fat.value} aria-invalid={!fat.valid} onChange={(ev) => setFat({ value: Number(ev.target.value), valid: true })} />
-            </Field>
-            <Field>
-                <FieldLabel htmlFor="carb">Carb</FieldLabel>
-                <Input id="carb" type="number" value={carb.value} aria-invalid={!carb.valid} onChange={(ev) => setCarb({ value: Number(ev.target.value), valid: true })} />
-            </Field>
-            <Field>
-                <FieldLabel htmlFor="protein">Protein</FieldLabel>
-                <Input id="protein" type="number" value={protein.value} aria-invalid={!protein.valid} onChange={(ev) => setProtein({ value: Number(ev.target.value), valid: true })} />
-            </Field>
 
-        </FieldGroup>
+    return <>
+        <SwitchButton values={['Automatic', 'Manual']} onChange={setMode}/>
+        {mode === 'Automatic' ? 
+            <SetupGoalAutomatically goalSetup={goalSetup} setGoalSetup={setGoalSetup}/> :
+            <SetupGoalManually goalSetup={goalSetup} setGoalSetup={setGoalSetup}/>}
 
         <Button className="cursor-pointer" onClick={onSubmit}>{goal === null ? 'Complete' : 'Save'}</Button>
     </>

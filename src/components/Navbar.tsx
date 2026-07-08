@@ -10,16 +10,21 @@ export default function Navbar() {
     }
 
     function renderIcons(){
-        return Object.entries(icons).map(([name, Icon]) => {
-            let classList = "transition"
+        return Object.entries(icons).map(([name, Icon], idx) => {
+            let classList = "transition cursor-pointer"
             if (page === name)
                 classList += " text-sky-400"
 
-            return <Icon className={classList} onClick={() => setPage(name as typeof page)}/>
+            const containerClass = idx < Object.keys(icons).length - 1 ? 'border-r border-accent' : ''
+
+            return <div className={`${containerClass} w-full flex justify-center h-full items-center`}>
+                <Icon className={classList} onClick={() => setPage(name as typeof page)}/>
+
+                </div>
         })
     }
     
-    return <div className="fixed bg-background bottom-0 left-0 w-full h-15 flex justify-around items-center border-t border-accent">
+    return <div className="fixed bg-background bottom-0 left-0 p-3 w-full h-15 flex justify-around items-center border-t border-accent">
         {renderIcons()}
     </div>
 }
